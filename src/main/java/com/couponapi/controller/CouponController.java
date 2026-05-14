@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,8 +38,14 @@ public class CouponController {
                 content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<CouponResponse> create(@Valid @RequestBody CreateCouponRequest request) {
-        CouponResponse response = couponService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(couponService.create(request));
+    }
+
+    @GetMapping
+    @Operation(summary = "List all active coupons")
+    @ApiResponse(responseCode = "200", description = "List of active coupons")
+    public ResponseEntity<List<CouponResponse>> findAll() {
+        return ResponseEntity.ok(couponService.findAll());
     }
 
     @GetMapping("/{id}")
